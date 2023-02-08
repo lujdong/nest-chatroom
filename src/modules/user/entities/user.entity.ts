@@ -6,13 +6,13 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   username: string;
 
   @Column({ nullable: true })
   nickname: string;
 
-  @Column({ nullable: true })
+  @Column({ select: false })
   password: string;
 
   @Column({ nullable: true })
@@ -30,6 +30,18 @@ export class User {
   @Column({ nullable: true, type: 'datetime' })
   birthday: string;
 
-  @Column({ name: 'create_time', type: 'datetime', default: getDateTime() })
+  @Column({
+    name: 'create_time',
+    type: 'datetime',
+    default: getDateTime(),
+    transformer: {
+      to(value) {
+        return getDateTime(value);
+      },
+      from(value) {
+        return getDateTime(value);
+      },
+    },
+  })
   createTime: string;
 }

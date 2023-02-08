@@ -36,16 +36,13 @@ export class UserService {
 
   async userRegister(requestBody: UserRegisterParams): Promise<ResponseEntity> {
     const { data } = await this.getUserByName(requestBody.username);
-    console.log('data: ', data);
     // 数据中已经存在该用户名
     if (data) {
-      console.log({
+      return {
         code: ResponseCode.FAIL,
         message: '用户名已存在',
         data: null,
-      });
-
-      return { code: ResponseCode.FAIL, message: '用户名已存在', data: null };
+      };
     }
     const newUser = await this.userRepository.save(requestBody);
     return {
