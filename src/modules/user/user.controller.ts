@@ -12,7 +12,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserRegisterParams } from './dto/user.dto';
+import { UserRegisterParams, UserLoginParams } from './dto/user.dto';
 
 @Controller('user')
 export class UserController {
@@ -46,6 +46,11 @@ export class UserController {
   @Post('register')
   async register(@Body() body: UserRegisterParams) {
     return await this.userService.userRegister(body);
+  }
+
+  @Post('login')
+  async login(@Body() body: UserLoginParams) {
+    return await this.userService.userLogin(body);
   }
 
   @Get('findByName')

@@ -1,10 +1,14 @@
 import { ResponseCode } from './../../enums/code';
 import { User } from './entities/user.entity';
-import { Inject, Injectable } from '@nestjs/common';
+import { Body, Inject, Injectable } from '@nestjs/common';
 import { Like, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserBaseInfo, UserRegisterParams } from './dto/user.dto';
+import {
+  UserBaseInfo,
+  UserRegisterParams,
+  UserLoginParams,
+} from './dto/user.dto';
 import { ResponseEntity } from 'src/types/response';
 
 @Injectable()
@@ -73,5 +77,30 @@ export class UserService {
     } catch (e) {
       return { code: ResponseCode.ERROR, message: '查找用户错误', data: null };
     }
+  }
+
+  /**
+   * 用户登录
+   */
+  async userLogin(
+    @Body() body: UserLoginParams,
+  ): Promise<ResponseEntity<UserBaseInfo>> {
+    const { username, password } = body;
+    const user = await this.userRepository.findOneBy({
+      username,
+      password,
+    });
+    if (!user) {
+      return {
+        code: -1,
+        message: '用户名或密码错误',
+      };
+    }
+
+    return {
+      code: 0,
+      data: user,
+      message: '登录成功',
+    };
   }
 }
