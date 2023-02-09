@@ -103,4 +103,23 @@ export class UserService {
       message: '登录成功',
     };
   }
+
+  /**
+   * 根据用户ID查询
+   */
+  async getUserById(id: string) {
+    const user = await this.userRepository.findOneBy({ id });
+    if (!user) {
+      return {
+        code: -1,
+        message: '用户不存在',
+      };
+    }
+
+    return {
+      code: 0,
+      data: user,
+      message: '查询成功',
+    };
+  }
 }
