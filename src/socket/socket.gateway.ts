@@ -1,24 +1,36 @@
-import { UserBaseInfo } from './../modules/user/dto/user.dto';
 import {
   WebSocketGateway,
   SubscribeMessage,
   MessageBody,
   ConnectedSocket,
+  WebSocketServer,
 } from '@nestjs/websockets';
-import { Socket } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { SocketService } from './socket.service';
-import { CreateSocketDto } from './dto/create-socket.dto';
-import { UpdateSocketDto } from './dto/update-socket.dto';
 
 @WebSocketGateway({ cors: true })
 export class SocketGateway {
-  constructor(private readonly socketService: SocketService) {}
+  constructor(private readonly socketService: SocketService) {
+    this.defaultGroup = '公共聊天室';
+  }
+
+  @WebSocketServer()
+  server: Server;
+
+  defaultGroup: string;
 
   @SubscribeMessage('joinChatroom')
-  joinChatroom(
+  async joinChatroom(@ConnectedSocket() socket: Socket, @MessageBody() data) {
+    return await this.socketService.joinChatroom(socket, data);
+  }
+
+  @SubscribeMessage('roomUsers')
+  async getChatGroupUsers(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() user: UserBaseInfo,
+    @MessageBody() data: { groupId: string },
   ) {
-    return this.socketService.joinChatroom(socket, user);
+    const allSockets = await this.server.in('公共聊天室').fetchSockets();
+    console.log('===========连接数量===============', allSockets.length);
+    return await this.socketService.getChatGroupUsers(socket, data);
   }
 }

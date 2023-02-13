@@ -1,23 +1,29 @@
+import { User } from 'src/modules/user/entities/user.entity';
 import { getDateTime } from 'src/utils/datatime';
-import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToMany,
+  JoinTable,
+  BaseEntity,
+} from 'typeorm';
 
 export class Socket {}
 
 @Entity({ name: 'chat_group' })
-export class ChatGroup {
-  @PrimaryColumn({ default: 0 })
-  @PrimaryGeneratedColumn('increment')
-  id: number;
+export class ChatGroup extends BaseEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  // userId 在群聊中是唯一的，一个用户无法多次加入同一群聊
-  @Column({ name: 'user_id', unique: true })
+  @Column({ default: 'admin' })
   userId: string;
 
   @Column({ name: 'group_name', default: '公共聊天室' })
   groupName: string;
 
   @Column({
-    name: 'join_time',
+    name: 'create_time',
     type: 'datetime',
     default: getDateTime(),
     transformer: {
@@ -29,5 +35,17 @@ export class ChatGroup {
       },
     },
   })
-  joinTime: string;
+  createTime: string;
+}
+
+@Entity({ name: 'user_chat_group' })
+export class UserChatGroup extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  id: string;
+
+  @Column({ name: ' user_id' })
+  userId: string;
+
+  @Column({ name: 'chat_group_id' })
+  groupId: string;
 }

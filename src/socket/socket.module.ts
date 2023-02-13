@@ -1,18 +1,43 @@
+import { UserModule } from './../modules/user/user.module';
 import { DatabaseModule } from './../modules/database/database.module';
-import { Module } from '@nestjs/common';
+import { Inject, Module } from '@nestjs/common';
 import { SocketService } from './socket.service';
 import { SocketGateway } from './socket.gateway';
-import { chatGroupProviders } from './socket.providers';
+import { chatGroupProviders, userChatGroupProviders } from './socket.providers';
 import { userProviders } from 'src/modules/user/user.providers';
+import { Repository } from 'typeorm';
+import { ChatGroup } from './entities/socket.entity';
+
+export const defaultGroupData = {
+  id: '0',
+  groupName: '公共聊天室',
+  userId: 'admin',
+};
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, UserModule],
   providers: [
     ...chatGroupProviders,
     ...userProviders,
+    ...userChatGroupProviders,
     SocketGateway,
     SocketService,
   ],
   exports: [...chatGroupProviders, ...userProviders],
 })
-export class SocketModule {}
+export class SocketModule {
+  constructor(
+    @Inject('CHAT_GROUP_REPOSITORY')
+    private readonly chatGroupRepository: Repository<ChatGroup>,
+  ) {}
+  async onModuleInit() {
+    const defaultGroup = await this.chatGroupRepository.findOneBy({
+      id: '0',
+      groupName: '公共聊天室',
+    });
+    if (!defaultGroup) {
+      await this.chatGroupRepository.save(defaultGroupData);
+      console.log('创建 公共聊天室');
+    }
+  }
+}

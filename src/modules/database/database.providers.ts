@@ -1,4 +1,7 @@
-import { ChatGroup } from './../../socket/entities/socket.entity';
+import {
+  ChatGroup,
+  UserChatGroup,
+} from './../../socket/entities/socket.entity';
 import { DataSource } from 'typeorm';
 import { User } from '../user/entities/user.entity';
 
@@ -13,7 +16,7 @@ export const databaseProviders = [
         username: 'root',
         password: 'root',
         database: 'chatroom',
-        entities: [User, ChatGroup],
+        entities: [User, ChatGroup, UserChatGroup],
         synchronize: true,
       });
 

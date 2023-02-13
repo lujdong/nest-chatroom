@@ -1,8 +1,8 @@
 import { getDateTime } from 'src/utils/datatime';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
 
 @Entity({ name: 'user_list' })
-export class User {
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
