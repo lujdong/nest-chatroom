@@ -3,7 +3,11 @@ import { DatabaseModule } from './../modules/database/database.module';
 import { Inject, Module } from '@nestjs/common';
 import { SocketService } from './socket.service';
 import { SocketGateway } from './socket.gateway';
-import { chatGroupProviders, userChatGroupProviders } from './socket.providers';
+import {
+  chatGroupProviders,
+  messageProviders,
+  userChatGroupProviders,
+} from './socket.providers';
 import { userProviders } from 'src/modules/user/user.providers';
 import { Repository } from 'typeorm';
 import { ChatGroup } from './entities/socket.entity';
@@ -20,6 +24,7 @@ export const defaultGroupData = {
     ...chatGroupProviders,
     ...userProviders,
     ...userChatGroupProviders,
+    ...messageProviders,
     SocketGateway,
     SocketService,
   ],

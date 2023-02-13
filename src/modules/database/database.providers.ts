@@ -1,3 +1,4 @@
+import { MessageList } from './../../socket/entities/message.entity';
 import {
   ChatGroup,
   UserChatGroup,
@@ -16,7 +17,7 @@ export const databaseProviders = [
         username: 'root',
         password: 'root',
         database: 'chatroom',
-        entities: [User, ChatGroup, UserChatGroup],
+        entities: [User, ChatGroup, UserChatGroup, MessageList],
         synchronize: true,
       });
 

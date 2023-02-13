@@ -1,3 +1,4 @@
+import { MessageList } from './entities/message.entity';
 import { UserService } from './../modules/user/user.service';
 import { ChatGroup, UserChatGroup } from './entities/socket.entity';
 import { Socket } from 'socket.io';
@@ -15,6 +16,8 @@ export class SocketService {
     private readonly userRepository: Repository<User>,
     @Inject('USER_CHAT_GROUP_REPOSITORY')
     private readonly userChatGroupRepository: Repository<UserChatGroup>,
+    @Inject('MESSAGE_REPOSITORY')
+    private readonly messageRepository: Repository<MessageList>,
     private readonly userService: UserService,
   ) {}
 
@@ -50,5 +53,24 @@ export class SocketService {
       }),
     );
     return users;
+  }
+
+  // 处理客户端断开连接逻辑
+  async disconnectSocket(socket: Socket, userId: string) {
+    // 断开连接后从群组中删除该用户
+    const user = await this.userChatGroupRepository.findOneBy({ userId });
+    if (user) {
+      await this.userChatGroupRepository.remove(user);
+    }
+    return '用户已断开连接';
+  }
+
+  // 处理前端发送消息的请求
+  async sendMessage(socket: Socket, data) {
+    if (!data.toId && !data.fromId) {
+      return '发送消息失败';
+    }
+    const res = await this.messageRepository.save(data);
+    console.log('res: ', res);
   }
 }
