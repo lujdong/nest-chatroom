@@ -1,14 +1,12 @@
+import { MessageList } from './entities/message.entity';
+import { UserChatGroup } from './entities/socket.entity';
+import { User } from 'src/modules/user/entities/user.entity';
+import { TypeOrmModule, InjectRepository } from '@nestjs/typeorm';
 import { UserModule } from '../user/user.module';
-import { DatabaseModule } from '../database/database.module';
-import { Inject, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { SocketService } from './socket.service';
 import { SocketGateway } from './socket.gateway';
-import {
-  chatGroupProviders,
-  messageProviders,
-  userChatGroupProviders,
-} from './socket.providers';
-import { userProviders } from 'src/modules/user/user.providers';
+
 import { Repository } from 'typeorm';
 import { ChatGroup } from './entities/socket.entity';
 
@@ -19,20 +17,15 @@ export const defaultGroupData = {
 };
 
 @Module({
-  imports: [DatabaseModule, UserModule],
-  providers: [
-    ...chatGroupProviders,
-    ...userProviders,
-    ...userChatGroupProviders,
-    ...messageProviders,
-    SocketGateway,
-    SocketService,
+  imports: [
+    TypeOrmModule.forFeature([User, ChatGroup, UserChatGroup, MessageList]),
+    UserModule,
   ],
-  exports: [...chatGroupProviders, ...userProviders],
+  providers: [SocketGateway, SocketService],
 })
 export class SocketModule {
   constructor(
-    @Inject('CHAT_GROUP_REPOSITORY')
+    @InjectRepository(ChatGroup)
     private readonly chatGroupRepository: Repository<ChatGroup>,
   ) {}
   async onModuleInit() {

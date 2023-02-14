@@ -1,8 +1,9 @@
+import { InjectRepository } from '@nestjs/typeorm';
 import { MessageList } from './entities/message.entity';
 import { UserService } from '../user/user.service';
 import { ChatGroup, UserChatGroup } from './entities/socket.entity';
 import { Socket } from 'socket.io';
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { User } from 'src/modules/user/entities/user.entity';
 import { ConnectedSocket, MessageBody } from '@nestjs/websockets';
@@ -10,13 +11,13 @@ import { ConnectedSocket, MessageBody } from '@nestjs/websockets';
 @Injectable()
 export class SocketService {
   constructor(
-    @Inject('CHAT_GROUP_REPOSITORY')
+    @InjectRepository(ChatGroup)
     private readonly chatGroupRepository: Repository<ChatGroup>,
-    @Inject('USER_REPOSITORY')
+    @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    @Inject('USER_CHAT_GROUP_REPOSITORY')
+    @InjectRepository(UserChatGroup)
     private readonly userChatGroupRepository: Repository<UserChatGroup>,
-    @Inject('MESSAGE_REPOSITORY')
+    @InjectRepository(MessageList)
     private readonly messageRepository: Repository<MessageList>,
     private readonly userService: UserService,
   ) {}
