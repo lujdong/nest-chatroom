@@ -1,8 +1,8 @@
-import { MessageList } from './../../socket/entities/message.entity';
+import { MessageList } from '../socket/entities/message.entity';
 import {
   ChatGroup,
   UserChatGroup,
-} from './../../socket/entities/socket.entity';
+} from '../socket/entities/socket.entity';
 import { DataSource } from 'typeorm';
 import { User } from '../user/entities/user.entity';
 

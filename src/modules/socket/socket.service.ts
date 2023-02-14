@@ -1,5 +1,5 @@
 import { MessageList } from './entities/message.entity';
-import { UserService } from './../modules/user/user.service';
+import { UserService } from '../user/user.service';
 import { ChatGroup, UserChatGroup } from './entities/socket.entity';
 import { Socket } from 'socket.io';
 import { Inject, Injectable } from '@nestjs/common';

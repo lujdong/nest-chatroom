@@ -1,5 +1,5 @@
-import { UserModule } from './../modules/user/user.module';
-import { DatabaseModule } from './../modules/database/database.module';
+import { UserModule } from '../user/user.module';
+import { DatabaseModule } from '../database/database.module';
 import { Inject, Module } from '@nestjs/common';
 import { SocketService } from './socket.service';
 import { SocketGateway } from './socket.gateway';
