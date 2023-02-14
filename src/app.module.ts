@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 // import { UserChatGroup } from './modules/socket/entities/socket.entity';
 // import { User } from './modules/user/entities/user.entity';
 // import { ChatGroup } from './socket copy/entities/socket.entity';
+import { SessionsModule } from './modules/sessions/sessions.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     DatabaseModule,
     UserModule,
     SocketModule,
+    SessionsModule,
   ],
   exports: [DatabaseModule],
   providers: [DatabaseModule],

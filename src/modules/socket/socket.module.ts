@@ -1,3 +1,5 @@
+import { SessionsModule } from './../sessions/sessions.module';
+import { SessionList } from './../sessions/entities/session.entity';
 import { MessageList } from './entities/message.entity';
 import { UserChatGroup } from './entities/socket.entity';
 import { User } from 'src/modules/user/entities/user.entity';
@@ -18,8 +20,15 @@ export const defaultGroupData = {
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, ChatGroup, UserChatGroup, MessageList]),
+    TypeOrmModule.forFeature([
+      User,
+      ChatGroup,
+      UserChatGroup,
+      MessageList,
+      SessionList,
+    ]),
     UserModule,
+    SessionsModule,
   ],
   providers: [SocketGateway, SocketService],
 })

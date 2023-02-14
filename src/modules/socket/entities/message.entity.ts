@@ -1,4 +1,4 @@
-import { MessageTypeEnum } from 'src/enums/message';
+import { MessageType } from 'src/enums/type';
 import { getDateTime } from 'src/utils/datatime';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -17,7 +17,7 @@ export class MessageList {
   content: string;
 
   @Column({ default: 0 })
-  type: MessageTypeEnum;
+  type: MessageType;
 
   @Column({
     name: 'create_time',

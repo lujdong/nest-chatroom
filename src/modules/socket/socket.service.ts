@@ -1,3 +1,6 @@
+import { SessionType } from './../../enums/type';
+import { SessionList } from './../sessions/entities/session.entity';
+import { SessionsService } from './../sessions/sessions.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MessageList } from './entities/message.entity';
 import { UserService } from '../user/user.service';
@@ -19,7 +22,10 @@ export class SocketService {
     private readonly userChatGroupRepository: Repository<UserChatGroup>,
     @InjectRepository(MessageList)
     private readonly messageRepository: Repository<MessageList>,
+    @InjectRepository(SessionList)
+    private readonly sessionRepository: Repository<SessionList>,
     private readonly userService: UserService,
+    private readonly sessionsService: SessionsService,
   ) {}
 
   async joinChatroom(@ConnectedSocket() socket: Socket, @MessageBody() data) {
@@ -35,6 +41,15 @@ export class SocketService {
       userId: data.userId,
       groupId: data.groupId,
     });
+
+    // 加入群组后创建一条群聊会话
+    const session = await this.sessionRepository.save({
+      userId: data.userId,
+      toId: data.groupId,
+      type: SessionType.GROUP,
+      lastMessage: '',
+    });
+    console.log('session: ', session);
     console.log('res: ', res);
     return res;
   }

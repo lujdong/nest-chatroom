@@ -22,6 +22,9 @@ export class ChatGroup extends BaseEntity {
   @Column({ name: 'group_name', default: '公共聊天室' })
   groupName: string;
 
+  @Column({ nullable: true })
+  cover: string;
+
   @Column({
     name: 'create_time',
     type: 'datetime',
