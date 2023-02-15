@@ -1,3 +1,4 @@
+import { ResponseCode } from 'src/enums/code';
 import { SessionType } from './../../enums/type';
 import { SessionList } from './../sessions/entities/session.entity';
 import { SessionsService } from './../sessions/sessions.service';
@@ -35,7 +36,10 @@ export class SocketService {
       userId: data.userId,
     });
     if (groupUser) {
-      return '用户已加入该群组，请勿重复加入';
+      return {
+        code: ResponseCode.FAIL,
+        message: '用户已加入该群组，请勿重复加入',
+      };
     }
     const res = await this.userChatGroupRepository.save({
       userId: data.userId,
@@ -49,9 +53,20 @@ export class SocketService {
       type: SessionType.GROUP,
       lastMessage: '',
     });
+
+    //  返回用户加入的群组信息
+    const group = await this.chatGroupRepository.find({
+      where: {
+        id: data.groupId,
+      },
+    });
+    console.log('group: ', group);
     console.log('session: ', session);
     console.log('res: ', res);
-    return res;
+    return {
+      code: ResponseCode.SUCCESS,
+      data: group,
+    };
   }
 
   async getChatGroupUsers(
