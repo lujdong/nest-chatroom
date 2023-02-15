@@ -1,3 +1,4 @@
+import { MessageList } from '.././socket/entities/message.entity';
 import { ResponseEntity } from 'src/types/response';
 import { User } from 'src/modules/user/entities/user.entity';
 import { SessionList } from './entities/session.entity';
@@ -13,6 +14,8 @@ export class SessionsService {
   constructor(
     @InjectRepository(SessionList)
     private readonly sessionRepository: Repository<SessionList>,
+    @InjectRepository(MessageList)
+    private readonly messageRepository: Repository<MessageList>,
   ) {}
 
   /**
@@ -72,15 +75,23 @@ export class SessionsService {
     };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} session`;
-  }
-
-  update(id: number, updateSessionDto: UpdateSessionDto) {
-    return `This action updates a #${id} session`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} session`;
+  async getMessageList(
+    sessionId: string,
+  ): Promise<ResponseEntity<MessageList[]>> {
+    try {
+      const data = await this.messageRepository.find({
+        where: { toId: sessionId },
+      });
+      return {
+        data,
+        code: ResponseCode.SUCCESS,
+        message: '获取历史消息成功',
+      };
+    } catch (e) {
+      return {
+        code: ResponseCode.ERROR,
+        message: '服务器错误',
+      };
+    }
   }
 }
