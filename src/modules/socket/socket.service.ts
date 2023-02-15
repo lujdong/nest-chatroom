@@ -102,6 +102,6 @@ export class SocketService {
       return '发送消息失败';
     }
     const res = await this.messageRepository.save(data);
-    console.log('res: ', res);
+    return res;
   }
 }

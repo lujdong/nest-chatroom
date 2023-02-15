@@ -65,6 +65,8 @@ export class SocketGateway {
     @ConnectedSocket() socket: Socket,
     @MessageBody() data: any,
   ) {
-    return this.socketService.sendMessage(socket, data);
+    console.log('data: ', data);
+    const res = await this.socketService.sendMessage(socket, data);
+    this.server.emit('message', res);
   }
 }
